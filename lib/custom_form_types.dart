@@ -1,8 +1,22 @@
 import 'package:formz/formz.dart';
 
-enum EmailValidationError { empty, invalid }
+enum EmailValidationError {
+  empty(message: "Please enter email"),
+  invalid(message: "Invalid email address");
 
-enum PasswordValidationError { empty, short }
+  final String message;
+
+  const EmailValidationError({required this.message});
+}
+
+enum PasswordValidationError {
+  empty(message: "Please enter password"),
+  short(message: "Enter strong password");
+
+  final String message;
+
+  const PasswordValidationError({required this.message});
+}
 
 class Email extends FormzInput<String, EmailValidationError>
     with FormzInputErrorCacheMixin {
