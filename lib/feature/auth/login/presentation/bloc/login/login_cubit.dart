@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
-import 'package:clean_arch_form_validation/custom_form_types.dart';
-import 'package:clean_arch_form_validation/repo/login_repo.dart';
+import 'package:clean_arch_form_validation/feature/auth/login/domain/form/form.dart';
+import 'package:clean_arch_form_validation/feature/auth/login/domain/repository/login_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
 part 'login_state.dart';
@@ -23,6 +23,7 @@ class LoginCubit extends Cubit<LoginState> {
     emit(
       state.copyWith(
         email: Email.dirty(value: email),
+        errorMessage: null,
       ),
     );
   }
@@ -31,6 +32,7 @@ class LoginCubit extends Cubit<LoginState> {
     emit(
       state.copyWith(
         password: Password.dirty(value: password),
+        errorMessage: null,
       ),
     );
   }
@@ -40,6 +42,7 @@ class LoginCubit extends Cubit<LoginState> {
       emit(
         state.copyWith(
           submissionStatus: FormzSubmissionStatus.inProgress,
+          errorMessage: null,
         ),
       );
       await loginRepository.performLogin(
@@ -49,6 +52,7 @@ class LoginCubit extends Cubit<LoginState> {
       emit(
         state.copyWith(
           submissionStatus: FormzSubmissionStatus.success,
+          errorMessage: null,
         ),
       );
     } catch (e) {
