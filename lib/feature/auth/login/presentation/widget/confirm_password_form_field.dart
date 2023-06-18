@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:clean_arch_form_validation/feature/auth/login/presentation/bloc/login/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PasswordFormField extends StatelessWidget {
-  const PasswordFormField({
+class ConfirmPasswordFormField extends StatelessWidget {
+  const ConfirmPasswordFormField({
     super.key,
     required TextEditingController passwordController,
   }) : _passwordController = passwordController;
@@ -14,23 +16,23 @@ class PasswordFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (oldState, newState) {
-        return oldState.password != newState.password;
+        return ((oldState.confirmPassword != newState.confirmPassword) ||
+            (oldState.password != newState.password));
       },
       builder: (context, state) {
-        // log("Password $state");
+        log("Confirm Password $state");
         return TextFormField(
           controller: _passwordController,
-          decoration: InputDecoration(
-            errorText: state.password.displayError?.message,
-            icon: const Icon(Icons.lock),
-            helperText: 'At least 8 characters including one letter and number',
+          decoration: const InputDecoration(
+            icon: Icon(Icons.lock),
+            helperText: 'Enter password Again',
             helperMaxLines: 2,
-            labelText: 'Password',
+            labelText: 'Confirm Password',
             errorMaxLines: 2,
           ),
           obscureText: false,
           textInputAction: TextInputAction.done,
-          validator: (_) => state.password.error?.message,
+          validator: (_) => state.confirmPassword.error?.message,
           autovalidateMode: AutovalidateMode.onUserInteraction,
         );
       },

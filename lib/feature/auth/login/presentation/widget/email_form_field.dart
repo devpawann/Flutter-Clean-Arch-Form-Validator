@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:clean_arch_form_validation/feature/auth/login/presentation/bloc/login/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +17,7 @@ class EmailFormField extends StatelessWidget {
         return oldState.email != newState.email;
       },
       builder: (context, state) {
-        log("Email $state");
+        // log("Email $state");
         return TextFormField(
           controller: _emailController,
           decoration: InputDecoration(

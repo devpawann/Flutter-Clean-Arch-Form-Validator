@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:clean_arch_form_validation/feature/auth/login/domain/form/form.dart';
 import 'package:clean_arch_form_validation/feature/auth/login/domain/repository/login_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -14,6 +16,7 @@ class LoginCubit extends Cubit<LoginState> {
             email: Email.pure(),
             password: Password.pure(),
             submissionStatus: FormzSubmissionStatus.initial,
+            confirmPassword: ConfirmPassword.pure(),
           ),
         );
 
@@ -29,9 +32,26 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void passwordChanged({required String password}) {
+    log("Password $password ${state.confirmPassword.value}");
     emit(
       state.copyWith(
         password: Password.dirty(value: password),
+        confirmPassword: ConfirmPassword.dirty(
+          password: password,
+          value: state.confirmPassword.value,
+        ),
+        errorMessage: null,
+      ),
+    );
+  }
+
+  void confirmPasswordChange({required String confirmPassword}) {
+    emit(
+      state.copyWith(
+        confirmPassword: ConfirmPassword.dirty(
+          password: state.password.value,
+          value: confirmPassword,
+        ),
         errorMessage: null,
       ),
     );
