@@ -4,6 +4,7 @@ import 'package:clean_arch_form_validation/bloc/login/login_cubit.dart';
 import 'package:clean_arch_form_validation/repo/login_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 
 void main() => runApp(const MyApp());
 
@@ -42,13 +43,20 @@ class _MyFormState extends State<MyForm> {
   @override
   void initState() {
     _emailController = TextEditingController()..addListener(_handleEmailChange);
-    _passwordController = TextEditingController();
+    _passwordController = TextEditingController()
+      ..addListener(_handlePasswordChange);
     super.initState();
   }
 
   void _handleEmailChange() {
     BlocProvider.of<LoginCubit>(context).emailChanged(
       email: _emailController.text,
+    );
+  }
+
+  void _handlePasswordChange() {
+    BlocProvider.of<LoginCubit>(context).passwordChanged(
+      password: _passwordController.text,
     );
   }
 
@@ -60,8 +68,7 @@ class _MyFormState extends State<MyForm> {
         children: [
           BlocBuilder<LoginCubit, LoginState>(
             buildWhen: (oldState, newState) {
-              log("Here ${oldState.email.value != newState.email.value}");
-              return oldState.email.value != newState.email.value;
+              return oldState.email != newState.email;
             },
             builder: (context, state) {
               log("Email $state");
@@ -76,11 +83,16 @@ class _MyFormState extends State<MyForm> {
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 validator: (_) => state.email.error?.message,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
               );
             },
           ),
           BlocBuilder<LoginCubit, LoginState>(
+            buildWhen: (oldState, newState) {
+              return oldState.password != newState.password;
+            },
             builder: (context, state) {
+              log("Password $state");
               return TextFormField(
                 controller: _passwordController,
                 decoration: const InputDecoration(
@@ -94,17 +106,31 @@ class _MyFormState extends State<MyForm> {
                 obscureText: true,
                 textInputAction: TextInputAction.done,
                 validator: (_) => state.password.error?.message,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
               );
             },
           ),
           const SizedBox(
             height: 24,
           ),
-          ElevatedButton(
-            onPressed: () {
-              log("Val ${_key.currentState?.validate()}");
+          BlocBuilder<LoginCubit, LoginState>(
+            buildWhen: (oldState, newState) {
+              return oldState.submissionStatus != newState.submissionStatus;
             },
-            child: const Text('Submit'),
+            builder: (context, state) {
+              return state.submissionStatus == FormzSubmissionStatus.inProgress
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: () {
+                        if (_key.currentState?.validate() ?? false) {
+                          BlocProvider.of<LoginCubit>(context).onLogin();
+                        } else {
+                          log("Validation Failed");
+                        }
+                      },
+                      child: const Text('Submit'),
+                    );
+            },
           ),
         ],
       ),
