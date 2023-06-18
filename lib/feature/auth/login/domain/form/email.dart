@@ -15,13 +15,15 @@ class Email extends FormzInput<String, EmailValidationError>
 
   Email.dirty({required String value}) : super.dirty(value);
 
+  final _emailRegExp = RegExp(
+    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
+  );
+
   @override
   EmailValidationError? validator(String value) {
     if (value.trim().isEmpty) {
       return EmailValidationError.empty;
-    } else if (value.trim().length < 5) {
-      return EmailValidationError.invalid;
     }
-    return null;
+    return _emailRegExp.hasMatch(value) ? null : EmailValidationError.invalid;
   }
 }
