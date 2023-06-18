@@ -1,8 +1,12 @@
 import 'dart:developer' as dev;
 import 'dart:math';
 
-class LoginRepository {
-  performLogin({required String email, required String password}) async {
+import 'package:clean_arch_form_validation/feature/auth/login/domain/repository/login_repository.dart';
+
+class LoginRepositoryImpl extends LoginRepository {
+  @override
+  Future<void> performLogin(
+      {required String email, required String password}) async {
     dev.log("Login on Progress Email: $email Password: $password");
 
     /// mimic delay
