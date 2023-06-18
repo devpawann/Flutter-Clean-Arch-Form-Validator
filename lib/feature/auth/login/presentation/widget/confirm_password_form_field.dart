@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:clean_arch_form_validation/feature/auth/login/presentation/bloc/login/login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +18,7 @@ class ConfirmPasswordFormField extends StatelessWidget {
             (oldState.password != newState.password));
       },
       builder: (context, state) {
-        log("Confirm Password $state");
+        // log("Confirm Password $state");
         return TextFormField(
           controller: _passwordController,
           decoration: const InputDecoration(

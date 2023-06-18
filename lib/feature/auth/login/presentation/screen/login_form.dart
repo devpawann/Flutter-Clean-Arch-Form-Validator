@@ -80,6 +80,31 @@ class _LoginFormState extends State<LoginForm> {
               height: 24,
             ),
             BlocBuilder<LoginCubit, LoginState>(
+              buildWhen: (old, newState) {
+                return old.acceptTerms != newState.acceptTerms;
+              },
+              builder: (context, state) {
+                log("CHECK $state ${state.acceptTerms.isPure}");
+                return CheckboxListTile(
+                  tileColor: (state.acceptTerms.displayError == null)
+                      ? Colors.white
+                      : Colors.red.withOpacity(0.3),
+                  title: const Text("Accept Terms"),
+                  subtitle: Text(state.acceptTerms.displayError ?? ""),
+                  isError: (state.acceptTerms.displayError != null),
+                  value: state.acceptTerms.value,
+                  onChanged: (v) {
+                    BlocProvider.of<LoginCubit>(context).acceptTermsChange(
+                      acceptTerms: v ?? false,
+                    );
+                  },
+                );
+              },
+            ),
+            const SizedBox(
+              height: 24,
+            ),
+            BlocBuilder<LoginCubit, LoginState>(
               buildWhen: (oldState, newState) {
                 return oldState.submissionStatus != newState.submissionStatus;
               },
@@ -90,6 +115,13 @@ class _LoginFormState extends State<LoginForm> {
                     : ElevatedButton(
                         onPressed: () {
                           if (_key.currentState?.validate() ?? false) {
+                            if (!state.acceptTerms.value) {
+                              BlocProvider.of<LoginCubit>(context)
+                                  .acceptTermsChange(
+                                acceptTerms: state.acceptTerms.value,
+                              );
+                              return;
+                            }
                             BlocProvider.of<LoginCubit>(context).onLogin();
                           } else {
                             log("Validation Failed");

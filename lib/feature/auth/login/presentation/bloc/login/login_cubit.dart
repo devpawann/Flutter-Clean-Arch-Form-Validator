@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:clean_arch_form_validation/feature/auth/login/domain/form/accept_terms.dart';
 import 'package:clean_arch_form_validation/feature/auth/login/domain/form/form.dart';
 import 'package:clean_arch_form_validation/feature/auth/login/domain/repository/login_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -17,6 +18,7 @@ class LoginCubit extends Cubit<LoginState> {
             password: Password.pure(),
             submissionStatus: FormzSubmissionStatus.initial,
             confirmPassword: ConfirmPassword.pure(),
+            acceptTerms: AcceptTerms.pure(),
           ),
         );
 
@@ -51,6 +53,17 @@ class LoginCubit extends Cubit<LoginState> {
         confirmPassword: ConfirmPassword.dirty(
           password: state.password.value,
           value: confirmPassword,
+        ),
+        errorMessage: null,
+      ),
+    );
+  }
+
+  void acceptTermsChange({required bool acceptTerms}) {
+    emit(
+      state.copyWith(
+        acceptTerms: AcceptTerms.dirty(
+          value: acceptTerms,
         ),
         errorMessage: null,
       ),
