@@ -1,9 +1,7 @@
 import 'dart:developer';
 
 import 'package:clean_arch_form_validation/feature/auth/login/presentation/bloc/login/login_cubit.dart';
-import 'package:clean_arch_form_validation/feature/auth/login/presentation/widget/confirm_password_form_field.dart';
-import 'package:clean_arch_form_validation/feature/auth/login/presentation/widget/email_form_field.dart';
-import 'package:clean_arch_form_validation/feature/auth/login/presentation/widget/password_form_field.dart';
+import 'package:clean_arch_form_validation/feature/auth/login/presentation/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -79,28 +77,7 @@ class _LoginFormState extends State<LoginForm> {
             const SizedBox(
               height: 24,
             ),
-            BlocBuilder<LoginCubit, LoginState>(
-              buildWhen: (old, newState) {
-                return old.acceptTerms != newState.acceptTerms;
-              },
-              builder: (context, state) {
-                log("CHECK $state ${state.acceptTerms.isPure}");
-                return CheckboxListTile(
-                  tileColor: (state.acceptTerms.displayError == null)
-                      ? Colors.white
-                      : Colors.red.withOpacity(0.3),
-                  title: const Text("Accept Terms"),
-                  subtitle: Text(state.acceptTerms.displayError ?? ""),
-                  isError: (state.acceptTerms.displayError != null),
-                  value: state.acceptTerms.value,
-                  onChanged: (v) {
-                    BlocProvider.of<LoginCubit>(context).acceptTermsChange(
-                      acceptTerms: v ?? false,
-                    );
-                  },
-                );
-              },
-            ),
+            const AcceptTermsCheckBox(),
             const SizedBox(
               height: 24,
             ),
