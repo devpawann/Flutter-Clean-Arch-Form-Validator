@@ -28,7 +28,7 @@ class PasswordFormField extends StatelessWidget {
             labelText: 'Password',
             errorMaxLines: 2,
           ),
-          obscureText: false,
+          obscureText: true,
           textInputAction: TextInputAction.done,
           validator: (_) => state.password.error?.message,
           autovalidateMode: AutovalidateMode.onUserInteraction,

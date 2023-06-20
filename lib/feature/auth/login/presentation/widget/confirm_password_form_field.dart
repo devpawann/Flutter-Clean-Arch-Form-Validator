@@ -28,7 +28,7 @@ class ConfirmPasswordFormField extends StatelessWidget {
             labelText: 'Confirm Password',
             errorMaxLines: 2,
           ),
-          obscureText: false,
+          obscureText: true,
           textInputAction: TextInputAction.done,
           validator: (_) => state.confirmPassword.error?.message,
           autovalidateMode: AutovalidateMode.onUserInteraction,
