@@ -2,7 +2,6 @@ import 'package:clean_arch_form_validation/feature/auth/login/presentation/bloc/
 import 'package:clean_arch_form_validation/feature/auth/login/presentation/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:formz/formz.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -88,32 +87,7 @@ class _LoginFormState extends State<LoginForm> {
             const SizedBox(height: 24),
             const AcceptTermsCheckBox(),
             const SizedBox(height: 24),
-            BlocBuilder<LoginCubit, LoginState>(
-              buildWhen: (oldState, newState) {
-                return oldState.submissionStatus != newState.submissionStatus ||
-                    oldState.acceptTerms != newState.acceptTerms;
-              },
-              builder: (context, state) {
-                return state.submissionStatus ==
-                        FormzSubmissionStatus.inProgress
-                    ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: () {
-                          if (_key.currentState?.validate() ?? false) {
-                            if (state.acceptTerms.value == false) {
-                              BlocProvider.of<LoginCubit>(context)
-                                  .acceptTermsChange(
-                                acceptTerms: state.acceptTerms.value,
-                              );
-                              return;
-                            }
-                            BlocProvider.of<LoginCubit>(context).onLogin();
-                          }
-                        },
-                        child: const Text('Login'),
-                      );
-              },
-            ),
+            LoginButton(formKey: _key),
           ],
         ),
       ),
