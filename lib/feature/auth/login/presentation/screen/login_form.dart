@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:clean_arch_form_validation/feature/auth/login/presentation/bloc/login/login_cubit.dart';
 import 'package:clean_arch_form_validation/feature/auth/login/presentation/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +47,15 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
+  final _items = ["User", "Admin"].map(
+    (item) {
+      return DropdownMenuItem<String>(
+        value: item,
+        child: Text(item),
+      );
+    },
+  ).toList();
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -74,16 +81,17 @@ class _LoginFormState extends State<LoginForm> {
             ConfirmPasswordFormField(
               passwordController: _confirmPasswordController,
             ),
-            const SizedBox(
-              height: 24,
+            const SizedBox(height: 24),
+            CustomDropDownFormField(
+              items: _items,
             ),
+            const SizedBox(height: 24),
             const AcceptTermsCheckBox(),
-            const SizedBox(
-              height: 24,
-            ),
+            const SizedBox(height: 24),
             BlocBuilder<LoginCubit, LoginState>(
               buildWhen: (oldState, newState) {
-                return oldState.submissionStatus != newState.submissionStatus;
+                return oldState.submissionStatus != newState.submissionStatus ||
+                    oldState.acceptTerms != newState.acceptTerms;
               },
               builder: (context, state) {
                 return state.submissionStatus ==
@@ -92,7 +100,7 @@ class _LoginFormState extends State<LoginForm> {
                     : ElevatedButton(
                         onPressed: () {
                           if (_key.currentState?.validate() ?? false) {
-                            if (!state.acceptTerms.value) {
+                            if (state.acceptTerms.value == false) {
                               BlocProvider.of<LoginCubit>(context)
                                   .acceptTermsChange(
                                 acceptTerms: state.acceptTerms.value,
@@ -100,11 +108,9 @@ class _LoginFormState extends State<LoginForm> {
                               return;
                             }
                             BlocProvider.of<LoginCubit>(context).onLogin();
-                          } else {
-                            log("Validation Failed");
                           }
                         },
-                        child: const Text('Submit'),
+                        child: const Text('Login'),
                       );
               },
             ),

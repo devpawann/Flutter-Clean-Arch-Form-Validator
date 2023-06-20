@@ -7,6 +7,7 @@ class LoginState extends Equatable {
   final FormzSubmissionStatus submissionStatus;
   final AcceptTerms acceptTerms;
   final String? errorMessage;
+  final UserRole userRole;
 
   const LoginState({
     required this.email,
@@ -14,6 +15,7 @@ class LoginState extends Equatable {
     required this.submissionStatus,
     required this.confirmPassword,
     required this.acceptTerms,
+    required this.userRole,
     this.errorMessage,
   });
 
@@ -25,7 +27,13 @@ class LoginState extends Equatable {
         errorMessage,
         confirmPassword,
         acceptTerms,
+        userRole,
       ];
+
+  @override
+  String toString() {
+    return 'LoginState{acceptTerms: $acceptTerms}';
+  }
 
   LoginState copyWith({
     Email? email,
@@ -34,6 +42,7 @@ class LoginState extends Equatable {
     FormzSubmissionStatus? submissionStatus,
     AcceptTerms? acceptTerms,
     String? errorMessage,
+    UserRole? userRole,
   }) {
     return LoginState(
       email: email ?? this.email,
@@ -42,11 +51,7 @@ class LoginState extends Equatable {
       submissionStatus: submissionStatus ?? this.submissionStatus,
       acceptTerms: acceptTerms ?? this.acceptTerms,
       errorMessage: errorMessage ?? this.errorMessage,
+      userRole: userRole ?? this.userRole,
     );
-  }
-
-  @override
-  String toString() {
-    return 'LoginState{acceptTerms: $acceptTerms}';
   }
 }
